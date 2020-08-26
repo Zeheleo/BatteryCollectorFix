@@ -17,7 +17,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Power")
-		float decayRate;
+	float decayRate;
 };
 
 

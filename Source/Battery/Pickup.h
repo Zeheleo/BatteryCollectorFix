@@ -42,15 +42,15 @@ public:
 
 	// return the mesh for the pickup
 	UFUNCTION(BlueprintPure, Category = "Pickup")
-		bool IsActive();
+	bool IsActive();
 
 	// allows other classes to safely cahnge whether or not pickup is active
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
-		void SetActive(bool state);
+	void SetActive(bool state);
 
 	// FUnction to call when the pickup is collected - override behavior of blueprint and code, this is an option
 	UFUNCTION(BlueprintNativeEvent)
-		void WasCollected();
+	void WasCollected();
 	virtual void WasCollected_Implementation();
 
 protected:
@@ -60,6 +60,6 @@ protected:
 private:
 	// statuc mesh to represent the pickup in the level
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
-		class UStaticMeshComponent* PickupMesh;
+	class UStaticMeshComponent* PickupMesh;
 
 };

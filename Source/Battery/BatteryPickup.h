@@ -29,5 +29,5 @@ protected:
 
 	// Set the amount of power the attery gives to the character
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true")) // Only blueprint can access here
-		float BatteryPower;
+	float BatteryPower;
 };

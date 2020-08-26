@@ -10,44 +10,44 @@ UCLASS(config = Game)
 class ABatteryCollectorCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
-		/** Camera boom positioning the camera behind the character */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+		
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+	class UCameraComponent* FollowCamera;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USphereComponent* CollectionSphere;
+	class USphereComponent* CollectionSphere;
 
 public:
 	ABatteryCollectorCharacter();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float BaseTurnRate;
+	float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float BaseLookUpRate;
+	float BaseLookUpRate;
 
 	// Accessor function for initial power
 	UFUNCTION(BlueprintPure, Category = "Power")
-		float GetInitialPower();
+	float GetInitialPower();
 
 	// Accessor function for current power
 	UFUNCTION(BlueprintPure, Category = "Power")
-		float GetCurrentPower();
+	float GetCurrentPower();
 
 	/*
 	Function to update the character's power
 	@param powerChange  . . This is the amount to change the power by, and it can be positive or negative
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Power")
-		void UpdatePower(float powerChange);
+	void UpdatePower(float powerChange);
 protected:
 
 	/** Resets HMD orientation in VR. */
@@ -84,20 +84,20 @@ protected:
 
 	// Called when we press a key to collect any pickups inside the CollectionSphere
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
-		void CollectPickups();
+	void CollectPickups();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
-		float InitialPower;
+	float InitialPower;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
-		float speedFactor;
+	float speedFactor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
-		float baseSpeed;
+	float baseSpeed;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Power")
-		float CharacterPower;
+	float CharacterPower;
 
 public:
 	/** Returns CameraBoom subobject **/
