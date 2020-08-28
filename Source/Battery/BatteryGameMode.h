@@ -7,12 +7,12 @@
 #include "BatteryGameMode.generated.h"
 
 UCLASS(minimalapi)
-class ABatteryCollectorGameMode : public AGameModeBase
+class ABatteryGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	ABatteryCollectorGameMode();
+	ABatteryGameMode();
 	virtual void Tick(float deltaTime) override;
 
 protected:

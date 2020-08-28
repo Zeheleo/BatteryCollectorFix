@@ -14,9 +14,9 @@
 #include "BatteryPickup.h"
 
 //////////////////////////////////////////////////////////////////////////
-// ABatteryCollectorCharacter
+// ABatteryCharacter
 
-ABatteryCollectorCharacter::ABatteryCollectorCharacter()
+ABatteryCharacter::ABatteryCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -58,6 +58,7 @@ ABatteryCollectorCharacter::ABatteryCollectorCharacter()
 	InitialPower = 2000.f;
 	CharacterPower = InitialPower;
 
+	// set the dependence of character speed
 	speedFactor = 0.75f;
 	baseSpeed = 10.0f;
 }
@@ -65,63 +66,63 @@ ABatteryCollectorCharacter::ABatteryCollectorCharacter()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ABatteryCollectorCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ABatteryCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ABatteryCollectorCharacter::CollectPickups);
+	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ABatteryCharacter::CollectPickups);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ABatteryCollectorCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ABatteryCollectorCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ABatteryCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ABatteryCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ABatteryCollectorCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &ABatteryCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ABatteryCollectorCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ABatteryCharacter::LookUpAtRate);
 
 	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ABatteryCollectorCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ABatteryCollectorCharacter::TouchStopped);
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &ABatteryCharacter::TouchStarted);
+	PlayerInputComponent->BindTouch(IE_Released, this, &ABatteryCharacter::TouchStopped);
 
 	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ABatteryCollectorCharacter::OnResetVR);
+	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ABatteryCharacter::OnResetVR);
 }
 
 
-void ABatteryCollectorCharacter::OnResetVR()
+void ABatteryCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void ABatteryCollectorCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+void ABatteryCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	Jump();
 }
 
-void ABatteryCollectorCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+void ABatteryCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	StopJumping();
 }
 
-void ABatteryCollectorCharacter::TurnAtRate(float Rate)
+void ABatteryCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ABatteryCollectorCharacter::LookUpAtRate(float Rate)
+void ABatteryCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ABatteryCollectorCharacter::MoveForward(float Value)
+void ABatteryCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -135,7 +136,7 @@ void ABatteryCollectorCharacter::MoveForward(float Value)
 	}
 }
 
-void ABatteryCollectorCharacter::MoveRight(float Value)
+void ABatteryCharacter::MoveRight(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -150,7 +151,7 @@ void ABatteryCollectorCharacter::MoveRight(float Value)
 	}
 }
 
-void ABatteryCollectorCharacter::CollectPickups()
+void ABatteryCharacter::CollectPickups()
 {
 	// Get all overlapping actors and store them in an array
 	TArray<AActor*> CollectedActors;
@@ -192,20 +193,26 @@ void ABatteryCollectorCharacter::CollectPickups()
 	}
 }
 
-float ABatteryCollectorCharacter::GetInitialPower()
+float ABatteryCharacter::GetInitialPower()
 {
 	return InitialPower;
 }
 
-float ABatteryCollectorCharacter::GetCurrentPower()
+float ABatteryCharacter::GetCurrentPower()
 {
 	return CharacterPower;
 }
 
 // called wheneverpower is inc or dec
-void ABatteryCollectorCharacter::UpdatePower(float PowerChange)
+void ABatteryCharacter::UpdatePower(float PowerChange)
 {
+	// change power
 	CharacterPower += PowerChange;
-	// GetCharacterMovement()->MaxWalkSpeed = baseSpeed + speedFactor + 
+
+	// change speed based on power
+	GetCharacterMovement()->MaxWalkSpeed = baseSpeed + speedFactor * CharacterPower;
+
+	// Call visual effect
+	PowerChangeEffect();
 }
 

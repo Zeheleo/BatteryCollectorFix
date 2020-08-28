@@ -5,7 +5,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
-ABatteryCollectorGameMode::ABatteryCollectorGameMode()
+ABatteryGameMode::ABatteryGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
@@ -20,11 +20,11 @@ ABatteryCollectorGameMode::ABatteryCollectorGameMode()
 	decayRate = 0.01f;
 }
 
-void ABatteryCollectorGameMode::Tick(float dt)
+void ABatteryGameMode::Tick(float dt)
 {
 	Super::Tick(dt);
 
-	ABatteryCollectorCharacter* pCharacter = Cast<ABatteryCollectorCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	ABatteryCharacter* pCharacter = Cast<ABatteryCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	if (pCharacter)
 	{

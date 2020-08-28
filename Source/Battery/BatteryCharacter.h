@@ -7,7 +7,7 @@
 #include "BatteryCharacter.generated.h"
 
 UCLASS(config = Game)
-class ABatteryCollectorCharacter : public ACharacter
+class ABatteryCharacter : public ACharacter
 {
 	GENERATED_BODY()
 		
@@ -24,7 +24,7 @@ class ABatteryCollectorCharacter : public ACharacter
 	class USphereComponent* CollectionSphere;
 
 public:
-	ABatteryCollectorCharacter();
+	ABatteryCharacter();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -94,6 +94,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
 	float baseSpeed;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Power")
+	void PowerChangeEffect();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Power")
