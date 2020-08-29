@@ -6,6 +6,16 @@
 #include "GameFramework/GameModeBase.h"
 #include "BatteryGameMode.generated.h"
 
+// enum to store the current state of gameplay
+UENUM(BlueprintType)
+enum class EBatteryPlayState : uint8
+{
+	EPlaying,
+	EGameOver,
+	EWon,
+	EUnknown
+};
+
 UCLASS(minimalapi)
 class ABatteryGameMode : public AGameModeBase
 {
@@ -20,6 +30,13 @@ public:
 	float GetPowerToWin() const;
 
 	virtual void BeginPlay() override;
+
+	// Returns the current palying state
+	UFUNCTION(BlueprintPure, Category = "Power")
+	EBatteryPlayState GetCurrentState() const;
+
+	// Sets a new playing state
+	void SetCurrentState(EBatteryPlayState NewState);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
@@ -36,7 +53,7 @@ protected:
 	// the instance of the HUD
 	UPROPERTY()
 	class UUserWidget* CurrentWidget;
+
+private:
+	EBatteryPlayState CurrentState;
 };
-
-
-
