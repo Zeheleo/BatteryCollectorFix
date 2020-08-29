@@ -18,7 +18,7 @@ ABatteryGameMode::ABatteryGameMode()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Set initial decay value
-	decayRate = 0.01f;
+	decayRate = 0.03f;
 }
 
 void ABatteryGameMode::BeginPlay()
